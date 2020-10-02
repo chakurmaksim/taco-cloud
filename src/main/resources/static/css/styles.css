@@ -1,0 +1,38 @@
+.caption {
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    padding-left: 25%;
+}
+
+.ingredients-group {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 2vw;
+}
+
+.order-group {
+    display: grid;
+    grid-template-areas:
+        "caption caption"
+        "input link";
+    grid-template-rows: 300px 1fr;
+    grid-template-columns: 50% 1fr;
+}
+
+#order-caption {
+    grid-area: caption;
+}
+
+#order-input {
+    grid-area: input
+}
+
+#order-link {
+    grid-area: link
+}
+
+.validation-error {
+    color: red
+}
