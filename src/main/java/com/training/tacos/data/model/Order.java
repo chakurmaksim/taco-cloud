@@ -6,21 +6,24 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Date;
+import java.util.List;
 
 @Data
 public class Order {
 
+    private Long id;
     @NotNull
     @Size(min=3, message="Name must be at least 3 characters long")
-    private String name;
+    private String deliveryName;
     @NotEmpty(message="Street is required")
-    private String street;
+    private String deliveryStreet;
     @NotEmpty(message = "City is required")
-    private String city;
+    private String deliveryCity;
     @NotEmpty(message="State is required")
-    private String state;
+    private String deliveryState;
     @NotEmpty(message="Zip code is required")
-    private String zip;
+    private String deliveryZip;
     @NotEmpty(message="Not a valid credit card number")
     private String ccNumber;
     @Pattern(regexp="^(0[1-9]|1[0-2])([\\/])([1-9][0-9])$",
@@ -28,4 +31,6 @@ public class Order {
     private String ccExpiration;
     @Digits(integer=3, fraction=0, message="Invalid CVV")
     private String ccCVV;
+    private Date placedAt;
+    private List<Taco> tacos;
 }
