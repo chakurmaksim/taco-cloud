@@ -1,4 +1,4 @@
-package com.training.tacos.config;
+package com.training.tacos.web.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;

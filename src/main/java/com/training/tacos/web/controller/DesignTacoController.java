@@ -1,11 +1,10 @@
-package com.training.tacos.controller;
+package com.training.tacos.web.controller;
 
+import com.training.tacos.data.dto.OrderDto;
+import com.training.tacos.data.dto.TacoDto;
 import com.training.tacos.data.model.Ingredient;
 import com.training.tacos.data.model.Ingredient.Type;
-import com.training.tacos.data.model.Order;
-import com.training.tacos.data.model.Taco;
-import com.training.tacos.data.repository.IngredientRepository;
-import com.training.tacos.data.repository.TacoRepository;
+import com.training.tacos.service.DesignTacoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
-
-import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,44 +29,36 @@ public class DesignTacoController {
 
     private static final String DESIGN_FORM = "design";
     private static final String DESIGN_ATTRIBUTE = "design";
-    private static List<Ingredient> ingredients;
-    private final IngredientRepository ingredientRepo;
-    private final TacoRepository tacoRepository;
+    private final DesignTacoService designTacoService;
 
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository tacoRepository) {
-        this.ingredientRepo = ingredientRepo;
-        this.tacoRepository = tacoRepository;
-    }
-
-    @PostConstruct
-    public void initIngredients() {
-        ingredients = ingredientRepo.findAll();
+    public DesignTacoController(DesignTacoService designTacoService) {
+        this.designTacoService = designTacoService;
     }
 
     @ModelAttribute(name = "order")
-    public Order order() {
-        return new Order();
+    public OrderDto order() {
+        return new OrderDto();
     }
 
     @GetMapping
     public String showDesignForm(Model model) {
         log.info("Design form was inquired");
         addTypeAttributes(model);
-        model.addAttribute(DESIGN_ATTRIBUTE, new Taco());
+        model.addAttribute(DESIGN_ATTRIBUTE, new TacoDto());
         return DESIGN_FORM;
     }
 
     @PostMapping
-    public String processDesign(@Valid @ModelAttribute("design") Taco design, Errors errors,
-                                Model model, @ModelAttribute Order order) {
+    public String processDesign(@Valid @ModelAttribute("design") TacoDto design, Errors errors,
+                                Model model, @ModelAttribute("order") OrderDto order) {
         if (errors.hasErrors()) {
             log.error(errors.toString());
             addTypeAttributes(model);
             return DESIGN_FORM;
         }
         log.info("Processing design: " + design);
-        Taco saved = tacoRepository.save(design);
+        TacoDto saved = designTacoService.saveTaco(design);
         addDesign(order, saved);
         return "redirect:/orders/current";
     }
@@ -82,12 +71,12 @@ public class DesignTacoController {
     private void addTypeAttributes(Model model) {
         Type[] types = Ingredient.Type.values();
         for (Type type : types) {
-            model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
+            model.addAttribute(type.toString().toLowerCase(), filterByType(designTacoService.getAllIngredients(), type));
         }
     }
 
-    private void addDesign(Order order, Taco taco) {
-        List<Taco> tacos = order.getTacos();
+    private void addDesign(OrderDto order, TacoDto taco) {
+        List<TacoDto> tacos = order.getTacos();
         if (tacos == null) {
             tacos = new ArrayList<>();
         }
