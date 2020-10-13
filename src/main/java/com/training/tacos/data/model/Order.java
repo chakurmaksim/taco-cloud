@@ -1,36 +1,53 @@
 package com.training.tacos.data.model;
 
-import lombok.Data;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.GenerationType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
-@Data
+@EqualsAndHashCode
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "Taco_Order")
 public class Order {
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    @Size(min=3, message="Name must be at least 3 characters long")
     private String deliveryName;
-    @NotEmpty(message="Street is required")
     private String deliveryStreet;
-    @NotEmpty(message = "City is required")
     private String deliveryCity;
-    @NotEmpty(message="State is required")
     private String deliveryState;
-    @NotEmpty(message="Zip code is required")
     private String deliveryZip;
-    @NotEmpty(message="Not a valid credit card number")
+    @Column(name = "cc_number")
     private String ccNumber;
-    @Pattern(regexp="^(0[1-9]|1[0-2])([\\/])([1-9][0-9])$",
-            message="Must be formatted MM/YY")
+    @Column(name = "cc_expiration")
     private String ccExpiration;
-    @Digits(integer=3, fraction=0, message="Invalid CVV")
+    @Column(name = "cc_cvv")
     private String ccCVV;
-    private Date placedAt;
+    private Timestamp placedAt;
+    @ManyToMany
+    @JoinTable(name = "Taco_Order_Tacos", joinColumns = @JoinColumn(name = "taco_order_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "taco_id", referencedColumnName = "id"))
     private List<Taco> tacos;
+
+    @PrePersist
+    public void createdAt() {
+        placedAt = new Timestamp(new Date().getTime());
+    }
 }

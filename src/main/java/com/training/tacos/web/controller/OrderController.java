@@ -1,7 +1,7 @@
-package com.training.tacos.controller;
+package com.training.tacos.web.controller;
 
-import com.training.tacos.data.model.Order;
-import com.training.tacos.data.repository.OrderRepository;
+import com.training.tacos.data.dto.OrderDto;
+import com.training.tacos.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,28 +24,28 @@ public class OrderController {
 
     private static final String ORDER_ATTRIBUTE = "order";
     private static final String ORDER_FORM = "order";
-    private OrderRepository orderRepo;
+    private OrderService orderService;
 
     @Autowired
-    public OrderController(OrderRepository orderRepo) {
-        this.orderRepo = orderRepo;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @GetMapping("/current")
-    public String orderForm(Model model, @ModelAttribute("order") Order order) {
+    public String orderForm(Model model, @ModelAttribute("order") OrderDto order) {
         if (order == null) {
-            model.addAttribute(ORDER_ATTRIBUTE, new Order());
+            model.addAttribute(ORDER_ATTRIBUTE, new OrderDto());
         }
         return ORDER_FORM;
     }
 
     @PostMapping
-    public String processOrder(@Valid @ModelAttribute("order") Order order, Errors errors,
+    public String processOrder(@Valid @ModelAttribute("order") OrderDto order, Errors errors,
                                SessionStatus sessionStatus) {
         if (errors.hasErrors()) {
             return ORDER_FORM;
         }
-        orderRepo.save(order);
+        orderService.saveOrder(order);
         sessionStatus.setComplete();
         log.info("Order submitted: " + order);
         return "redirect:/";
