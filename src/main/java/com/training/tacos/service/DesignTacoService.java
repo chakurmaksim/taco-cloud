@@ -1,6 +1,6 @@
 package com.training.tacos.service;
 
-import com.training.tacos.data.dto.TacoDto;
+import com.training.tacos.service.dto.TacoDto;
 import com.training.tacos.data.model.Ingredient;
 import com.training.tacos.data.model.Taco;
 import com.training.tacos.data.repository.IngredientRepository;

@@ -1,6 +1,6 @@
 package com.training.tacos.web.controller;
 
-import com.training.tacos.data.dto.OrderDto;
+import com.training.tacos.service.dto.OrderDto;
 import com.training.tacos.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

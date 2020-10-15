@@ -1,4 +1,4 @@
-package com.training.tacos.data.dto;
+package com.training.tacos.service.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

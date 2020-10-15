@@ -1,8 +1,5 @@
 .caption {
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
-    padding-left: 25%;
+    text-align: center;
 }
 
 .ingredients-group {
@@ -21,6 +18,10 @@
     grid-template-columns: 50% 1fr;
 }
 
+.validation-error {
+    color: red
+}
+
 #order-caption {
     grid-area: caption;
 }
@@ -31,8 +32,4 @@
 
 #order-link {
     grid-area: link
-}
-
-.validation-error {
-    color: red
 }
