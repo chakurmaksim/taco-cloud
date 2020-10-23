@@ -11,6 +11,7 @@
     <img th:src="@{/images/register.png}"/>
 </div>
 <form method="POST" th:action="@{/register}" th:object="${registrationForm}">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
     <div class="signup-classic">
         <input type="text" placeholder="Username" th:field="*{username}"/>
         <span class="validation-error"

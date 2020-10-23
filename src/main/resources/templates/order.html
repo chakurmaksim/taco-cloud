@@ -15,6 +15,7 @@
     </div>
     <div id="order-input">
         <form method="POST" th:action="@{/orders}" th:object="${order}">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
             <div th:if="${#fields.hasErrors()}">
                 <span class="validation-error">
                     Please correct the problems below and resubmit.
