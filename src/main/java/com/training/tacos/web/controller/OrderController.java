@@ -1,9 +1,11 @@
 package com.training.tacos.web.controller;
 
+import com.training.tacos.data.model.User;
 import com.training.tacos.service.dto.OrderDto;
 import com.training.tacos.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -32,16 +34,17 @@ public class OrderController {
     }
 
     @GetMapping("/current")
-    public String orderForm(Model model, @ModelAttribute("order") OrderDto order) {
+    public String orderForm(Model model, @ModelAttribute("order") OrderDto order, Authentication authentication) {
         if (order == null) {
-            model.addAttribute(ORDER_ATTRIBUTE, new OrderDto());
+            model.addAttribute(ORDER_ATTRIBUTE, fillOrderFormWithUserInfo(new OrderDto(), authentication));
         }
+        fillOrderFormWithUserInfo(order, authentication);
         return ORDER_FORM;
     }
 
     @PostMapping
     public String processOrder(@Valid @ModelAttribute("order") OrderDto order, Errors errors,
-                               SessionStatus sessionStatus) {
+                               SessionStatus sessionStatus, Authentication authentication) {
         if (errors.hasErrors()) {
             return ORDER_FORM;
         }
@@ -49,5 +52,15 @@ public class OrderController {
         sessionStatus.setComplete();
         log.info("Order submitted: " + order);
         return "redirect:/";
+    }
+
+    private OrderDto fillOrderFormWithUserInfo(OrderDto order, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        order.setDeliveryName(user.getFullname());
+        order.setDeliveryCity(user.getCity());
+        order.setDeliveryState(user.getState());
+        order.setDeliveryStreet(user.getStreet());
+        order.setDeliveryZip(user.getZip());
+        return order;
     }
 }

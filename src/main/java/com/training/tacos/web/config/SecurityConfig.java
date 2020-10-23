@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true);
-        http.headers().frameOptions().disable();
+        http.headers().frameOptions().disable(); // For h2-console access
     }
 
     @Bean
