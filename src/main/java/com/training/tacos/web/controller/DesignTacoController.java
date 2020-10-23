@@ -1,7 +1,7 @@
 package com.training.tacos.web.controller;
 
-import com.training.tacos.data.dto.OrderDto;
-import com.training.tacos.data.dto.TacoDto;
+import com.training.tacos.service.dto.OrderDto;
+import com.training.tacos.service.dto.TacoDto;
 import com.training.tacos.data.model.Ingredient;
 import com.training.tacos.data.model.Ingredient.Type;
 import com.training.tacos.service.DesignTacoService;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,7 +52,7 @@ public class DesignTacoController {
 
     @PostMapping
     public String processDesign(@Valid @ModelAttribute("design") TacoDto design, Errors errors,
-                                Model model, @ModelAttribute("order") OrderDto order) {
+                                Model model, @ModelAttribute("order") OrderDto order, Principal principal) {
         if (errors.hasErrors()) {
             log.error(errors.toString());
             addTypeAttributes(model);

@@ -1,8 +1,8 @@
 package com.training.tacos.service.mapper;
 
-import com.training.tacos.data.dto.TacoDto;
 import com.training.tacos.data.model.Ingredient;
 import com.training.tacos.data.model.Taco;
+import com.training.tacos.service.dto.TacoDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
