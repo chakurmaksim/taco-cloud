@@ -7,11 +7,15 @@ import com.training.tacos.data.repository.IngredientRepository;
 import com.training.tacos.data.repository.TacoRepository;
 import com.training.tacos.service.mapper.TacoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DesignTacoService {
@@ -42,5 +46,15 @@ public class DesignTacoService {
         Taco newTaco = tacoMapper.convertToEntity(tacoDto, ingredients);
         Taco savedTaco = tacoRepository.save(newTaco);
         return tacoMapper.convertToDto(savedTaco);
+    }
+
+    public List<TacoDto> findRecent(PageRequest pageRequest) {
+        List<Taco> page = tacoRepository.findAll(pageRequest).getContent();
+        return page.stream().map(tacoMapper::convertToDto).collect(Collectors.toList());
+    }
+
+    public TacoDto findById(Long id) {
+        Optional<Taco> taco = tacoRepository.findById(id);
+        return taco.map(tacoMapper::convertToDto).orElse(null);
     }
 }
