@@ -27,6 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // http.csrf().disable(); // disable csrf protection because it is enabled by default in spring security
         http.authorizeRequests()
                 .antMatchers("/design", "/orders", "/orders/**").hasRole("USER")
                 .antMatchers("/", "/**").permitAll()
