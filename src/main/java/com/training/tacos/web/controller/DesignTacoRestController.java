@@ -1,6 +1,7 @@
 package com.training.tacos.web.controller;
 
 import com.training.tacos.service.DesignTacoService;
+import com.training.tacos.service.dto.IngredientList;
 import com.training.tacos.service.dto.TacoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -20,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="/rest/design", produces="application/json")
-@CrossOrigin(origins="*")
+@RequestMapping(path = "/rest/design", produces = "application/json")
+@CrossOrigin(origins = "*")
 public class DesignTacoRestController {
 
     private final DesignTacoService designTacoService;
@@ -47,9 +48,14 @@ public class DesignTacoRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping(consumes="application/json")
+    @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public TacoDto saveTaco(@RequestBody TacoDto taco) {
         return designTacoService.saveTaco(taco);
+    }
+
+    @GetMapping("/ingredients")
+    public IngredientList getAllIngredients() {
+        return new IngredientList(designTacoService.getConvertedIngredients());
     }
 }

@@ -1,13 +1,14 @@
 package com.training.tacos.service;
 
+import com.training.tacos.service.dto.IngredientDto;
 import com.training.tacos.service.dto.TacoDto;
 import com.training.tacos.data.model.Ingredient;
 import com.training.tacos.data.model.Taco;
 import com.training.tacos.data.repository.IngredientRepository;
 import com.training.tacos.data.repository.TacoRepository;
+import com.training.tacos.service.mapper.IngredientMapper;
 import com.training.tacos.service.mapper.TacoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +24,16 @@ public class DesignTacoService {
     private final IngredientRepository ingredientRepo;
     private final TacoRepository tacoRepository;
     private final TacoMapper tacoMapper;
+    private final IngredientMapper ingredientMapper;
     private final List<Ingredient> ingredients = new ArrayList<>();
 
     @Autowired
     public DesignTacoService(IngredientRepository ingredientRepo, TacoRepository tacoRepository,
-                             TacoMapper tacoMapper) {
+                             TacoMapper tacoMapper, IngredientMapper ingredientMapper) {
         this.ingredientRepo = ingredientRepo;
         this.tacoRepository = tacoRepository;
         this.tacoMapper = tacoMapper;
+        this.ingredientMapper = ingredientMapper;
     }
 
     @PostConstruct
@@ -40,6 +43,10 @@ public class DesignTacoService {
 
     public List<Ingredient> getAllIngredients() {
         return ingredients;
+    }
+
+    public List<IngredientDto> getConvertedIngredients() {
+        return ingredients.stream().map(ingredientMapper::convertToDto).collect(Collectors.toList());
     }
 
     public TacoDto saveTaco(TacoDto tacoDto) {
