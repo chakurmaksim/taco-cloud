@@ -1,5 +1,6 @@
 package com.training.tacos.service;
 
+import com.training.tacos.jms.OrderMessagingService;
 import com.training.tacos.service.dto.OrderDto;
 import com.training.tacos.data.model.Order;
 import com.training.tacos.data.repository.OrderRepository;
@@ -12,16 +13,20 @@ public class OrderService {
 
     private OrderRepository orderRepo;
     private OrderMapper orderMapper;
+    private OrderMessagingService messagingService;
+    private static final String PROCESS_STATUS = "process";
 
     @Autowired
-    public OrderService(OrderRepository orderRepo, OrderMapper orderMapper) {
+    public OrderService(OrderRepository orderRepo, OrderMapper orderMapper, OrderMessagingService messagingService) {
         this.orderRepo = orderRepo;
         this.orderMapper = orderMapper;
+        this.messagingService = messagingService;
     }
 
     public OrderDto saveOrder(OrderDto orderDto) {
         Order newOrder = orderMapper.convertToEntity(orderDto);
         Order savedOrder = orderRepo.save(newOrder);
+        messagingService.sendOrder(orderDto, PROCESS_STATUS);
         return orderMapper.convertToDto(savedOrder);
     }
 }
